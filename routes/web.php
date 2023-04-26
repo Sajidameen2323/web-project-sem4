@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginRegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,4 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return view('test');
 });
-Route::get('/login', function () {
-    return view('Auth/login');
-});
+Route::get('/login',[LoginRegisterController::class,'login'])->name('login');
