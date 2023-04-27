@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h4>Guest Layout</h4>
+   
 
     {{ $slot }}
 </body>
