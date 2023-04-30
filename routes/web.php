@@ -21,6 +21,18 @@ Route::get('/', function () {
 Route::get('/test', function () {
     return view('test');
 });
-Route::get('/login', [LoginRegisterController::class, 'login'])->name('login');
-Route::post('/login', [LoginRegisterController::class, 'authenticate'])->name('authenticate');
-Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
+
+
+
+Route::middleware(['guest'])->group(function () {
+
+    Route::controller(LoginRegisterController::class)->group(function () {
+        Route::get('/login', 'login')->name('login');
+        Route::post('/login', 'authenticate')->name('authenticate');
+      
+    });
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
+});
