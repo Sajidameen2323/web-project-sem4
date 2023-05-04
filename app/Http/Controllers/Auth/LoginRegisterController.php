@@ -17,11 +17,11 @@ class LoginRegisterController extends Controller
         ]);
     }
 
-    public function login()
+    public function login(Request $request)
     {
         if (Auth::check()) {
             // The user is logged in...
-            return view('welcome', ['data' => 'kaaham']);
+            return view('welcome', ['session' => $request->session()]);
         }
         return view('Auth.login', ['data' => 'kaaham']);
     }
@@ -37,7 +37,7 @@ class LoginRegisterController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard')
+            return redirect()->route('dashboard', ['Remembered' => $remember])
                 ->withSuccess('You have successfully logged in!');
         }
 
