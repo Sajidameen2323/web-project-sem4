@@ -29,10 +29,12 @@ Route::middleware(['guest'])->group(function () {
     Route::controller(LoginRegisterController::class)->group(function () {
         Route::get('/login', 'login')->name('login');
         Route::post('/login', 'authenticate')->name('authenticate');
-      
+
     });
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
 });
+
+
