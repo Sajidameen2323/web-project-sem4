@@ -23,7 +23,13 @@ Route::get('/test', function () {
     return view('test');
 })->middleware(['auth', 'isAdmin'])->name("test");
 
+Route::get('/projects', function () {
+    return view('Project.index');
+})->middleware(['auth'])->name("projects");
 
+Route::get('/projects/add', function () {
+    return view('Project.add');
+})->middleware(['auth'])->name("projects.add");
 
 Route::middleware(['guest'])->group(function () {
 
