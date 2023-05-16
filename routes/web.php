@@ -30,10 +30,6 @@ Route::middleware(['guest'])->group(function () {
     Route::controller(LoginRegisterController::class)->group(function () {
         Route::get('/login', 'login')->name('login');
         Route::post('/login', 'authenticate')->name('authenticate');
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     });
     Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.reset');
     Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
