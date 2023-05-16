@@ -21,9 +21,9 @@ class LoginRegisterController extends Controller
     {
         if (Auth::check()) {
             // The user is logged in...
-            return view('welcome', ['session' => $request->session()]);
+            return view('welcome', ['session' => $request->session()->all()]);
         }
-        return view('Auth.login', ['data' => 'kaaham']);
+        return view('Auth.login', ['data' => 'Please Login!']);
     }
 
     public function authenticate(Request $request)

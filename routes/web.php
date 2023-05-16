@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginRegisterController;
+use App\Http\Controllers\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (Request $request) {
+    return view('welcome', ['Remembered' => false, 'session' => $request->session()->all()]);
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/test', function () {
     return view('test');
-});
+})->middleware(['auth', 'isAdmin'])->name("test");
 
 
 
@@ -29,8 +30,13 @@ Route::middleware(['guest'])->group(function () {
     Route::controller(LoginRegisterController::class)->group(function () {
         Route::get('/login', 'login')->name('login');
         Route::post('/login', 'authenticate')->name('authenticate');
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     });
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.reset');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 });
 
 Route::middleware(['auth'])->group(function () {
