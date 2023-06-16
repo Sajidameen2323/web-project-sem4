@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginRegisterController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 /*
@@ -23,13 +25,7 @@ Route::get('/test', function () {
     return view('test');
 })->middleware(['auth', 'isAdmin'])->name("test");
 
-Route::get('/projects', function () {
-    return view('Project.index');
-})->middleware(['auth'])->name("projects");
 
-Route::get('/projects/add', function () {
-    return view('Project.add');
-})->middleware(['auth'])->name("projects.add");
 
 Route::middleware(['guest'])->group(function () {
 
@@ -43,6 +39,29 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LoginRegisterController::class, 'logout'])->name('logout');
+
+
+    // Below routes manage projects
+    Route::get('/projects', [ProjectController::class, 'projects'])->name("projects");
+    Route::get('/projects/view/{id?}', [ProjectController::class, 'viewProject'])->name("project.view");
+
+    Route::get('/projects/add', [ProjectController::class, 'form'])->name("projects.addform");
+    Route::post('/projects/add', [ProjectController::class, 'store'])->name("projects.add");
+
+    Route::get('/projects/edit/{id}', [ProjectController::class, 'edit'])->name("projects.edit");
+    Route::put('/projects/update/{id}', [ProjectController::class, 'update'])->name("projects.update");
+
+    Route::delete('/projects/delete/{id}', [ProjectController::class, 'destroy'])->name("projects.delete");
+
+
+    // Below routes manage employees
+
+    Route::get('/employees', [EmployeeController::class, 'list'])->name("employees.list");
+    Route::get('/employees/add', [EmployeeController::class, 'form'])->name("employees.form");
+
+    Route::post('/employees/add', [EmployeeController::class, 'store'])->name("employees.add");
+    Route::get('/employees/edit/{id}', [EmployeeController::class, 'edit'])->name("employees.edit");
+    Route::put('/employees/update/{id}', [EmployeeController::class, 'update'])->name("employees.update");
+    
+    Route::delete('/employees/delete/{id}', [EmployeeController::class, 'destroy'])->name("employees.delete");
 });
-
-
