@@ -1,7 +1,13 @@
 <x-layout>
 
     <div class="mx-auto">
+        @if (session()->has('success'))
 
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
+            <span class="font-medium">{{ session()->get('success') }}</span>
+        </div>
+
+        @endif
         <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" action="{{ route('employees.update', $employee->id) }}">
             @csrf
             @method('PUT') <!-- Use the PUT method for updating -->
@@ -52,13 +58,7 @@
                 </button>
             </div>
         </form>
-        @if (session()->has('success'))
 
-        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
-            <span class="font-medium">{{ session()->get('success') }}</span>
-        </div>
-
-        @endif
     </div>
 
 

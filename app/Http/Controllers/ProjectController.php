@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commit;
 use App\Models\Project;
+use App\Models\Role;
+use App\Models\Task;
+use App\Models\Team;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,11 +23,20 @@ class ProjectController extends Controller
     {
         if (Auth::check()) {
             // The user is logged in...
+            $filterValue = $request->input('filter');
+            if ($filterValue) {
+                $query = Project::where('status', $filterValue);
+            } else {
 
-            $projs = Project::paginate(8);
+                $query = Project::where('project_id', '>', '0');
+            }
+            $projs = $query->paginate(8);
 
 
-            return view('Project.index', ['session' => $request->session()->all(), "projects" => $projs]);
+            return view('Project.index', [
+                'session' => $request->session()->all(), "projects" => $projs,
+                'filterValue' => $filterValue
+            ]);
         }
         return view('Auth.login', ['data' => 'Please Login!']);
     }
@@ -32,8 +45,15 @@ class ProjectController extends Controller
         if (Auth::check()) {
             // The user is logged in...
 
+            $managerRole = Role::where('role', 'manager')->first();
+            $managerRoleId = $managerRole->id;
 
-            $employees = User::select('id', 'name')->where('role', 2)->get();
+            $seniorRole = Role::where('role', 'senior')->first();
+            $seniorRoleId = $seniorRole->id;
+
+            $managers = User::select('id', 'name')->where('role', $managerRoleId)->get();
+
+            $seniors = User::select('id', 'name')->where('role', $seniorRoleId)->get();
 
             $frontend_arr = ['React', 'Vue', 'Next', 'Angular', 'Windows', 'Svelte'];
 
@@ -41,10 +61,13 @@ class ProjectController extends Controller
 
             $db_arr = ['Oracle', 'MySQL', 'MS SQL Server', 'PostgreSQL', 'MongoDB', 'Redis', 'Firestore'];
 
+            $status_arr = ['Active', 'Completed', 'Dropped', 'Postponed', 'Scheduled'];
+
             return view('Project.add', [
                 'session' => $request->session()->all(),
-                "managers" => $employees, "seniors" => $employees, 'frontend_arr' => $frontend_arr, 'backend_arr' => $backend_arr,
-                'db_arr' => $db_arr
+                "managers" => $managers, "seniors" => $seniors, 'frontend_arr' => $frontend_arr, 'backend_arr' => $backend_arr,
+                'db_arr' => $db_arr,
+                'status_arr' => $status_arr
             ]);
         }
         return view('Auth.login', ['data' => 'Please Login!']);
@@ -141,13 +164,18 @@ class ProjectController extends Controller
 
             $project_manager = User::select('name')->where('id', $item->project_manager)->first();
             $team_lead = User::select('name')->where('id', $item->team_lead)->first();
-
+            $tasks_count = count(Task::where('project_id', $id)->get());
+            $members_count = count(Team::where('project_id', $id)->get());
+            $commits_count = count(Commit::where('project_id', $id)->get());
             // Redirect or return a response
             // For example, redirect back to the previous page
             return view('Project.overview', [
                 'data' => $item, 'project_manager' => $project_manager->name,
-                'team_lead' => $team_lead->name
-            ]);
+                'team_lead' => $team_lead->name,
+                'tot_tasks' => $tasks_count,
+                'tot_members' => $members_count,
+                'tot_commits' => $commits_count,
+            ])->with('title', "kaham")->with('project_id', $item->project_id);
         }
         return view('Auth.login', ['data' => 'Please Login!']);
     }
@@ -158,9 +186,15 @@ class ProjectController extends Controller
             // The user is logged in...
 
             $project = Project::findOrFail($id);
+            $managerRole = Role::where('role', 'manager')->first();
+            $managerRoleId = $managerRole->id;
 
+            $seniorRole = Role::where('role', 'senior')->first();
+            $seniorRoleId = $seniorRole->id;
 
-            $employees = User::select('id', 'name')->where('role', 2)->get();
+            $managers = User::select('id', 'name')->where('role', $managerRoleId)->get();
+
+            $seniors = User::select('id', 'name')->where('role', $seniorRoleId)->get();
 
             $frontend_arr = ['React', 'Vue', 'Next', 'Angular', 'Windows', 'Svelte'];
 
@@ -168,11 +202,14 @@ class ProjectController extends Controller
 
             $db_arr = ['Oracle', 'MySQL', 'MS SQL Server', 'PostgreSQL', 'MongoDB', 'Redis', 'Firestore'];
 
+            $status_arr = ['Active', 'Completed', 'Dropped', 'Postponed', 'Scheduled'];
+
             return view('Project.edit', [
                 'session' => $request->session()->all(),
-                "managers" => $employees, "seniors" => $employees, 'frontend_arr' => $frontend_arr, 'backend_arr' => $backend_arr,
+                "managers" => $managers, "seniors" => $seniors, 'frontend_arr' => $frontend_arr, 'backend_arr' => $backend_arr,
                 'db_arr' => $db_arr,
-                'project' => $project
+                'project' => $project,
+                'status_arr' => $status_arr
             ]);
         }
         return view('Auth.login', ['data' => 'Please Login!']);
@@ -203,7 +240,7 @@ class ProjectController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return redirect('projects/edit/'.$id)
+                return redirect('projects/edit/' . $id)
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -235,6 +272,24 @@ class ProjectController extends Controller
             } else {
                 return redirect()->back()->with('failed', 'Failed to update project details. Please try again.');
             }
+        }
+        return view('Auth.login', ['data' => 'Please Login!']);
+    }
+
+
+    public function viewReports(Request $request, $id)
+    {
+        if (Auth::check()) {
+            // Find the item by ID
+            $item = Project::findOrFail($id);
+
+
+            // Redirect or return a response
+            // For example, redirect back to the previous page
+            return view('Report.index', [
+                'data' => $item
+
+            ])->with('title', "kaham")->with('project_id', $item->project_id);
         }
         return view('Auth.login', ['data' => 'Please Login!']);
     }

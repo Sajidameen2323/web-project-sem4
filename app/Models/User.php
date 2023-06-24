@@ -28,6 +28,18 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+    public function teams()
+    {
+        return $this->hasMany(Team::class);
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

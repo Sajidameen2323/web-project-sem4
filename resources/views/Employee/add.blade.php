@@ -1,6 +1,20 @@
 <x-layout>
 
     <div class="mx-auto">
+        @if (session()->has('success'))
+
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
+            <span class="font-medium">{{ session()->get('success') }}</span>
+        </div>
+
+        @endif
+        @if (session()->has('failed'))
+
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 " role="alert">
+            <span class="font-medium">{{ session()->get('failed') }}</span>
+        </div>
+
+        @endif
         <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" action="{{ route('employees.add') }}">
             @csrf
             <div class="grid md:grid-cols-2 gap-x-6 md:mt-4">
@@ -94,19 +108,6 @@
 
 
 
-    @if (session()->has('success'))
 
-        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
-            <span class="font-medium">{{ session()->get('success') }}</span>
-        </div>
-
-    @endif
-    @if (session()->has('failed'))
-
-        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 " role="alert">
-            <span class="font-medium">{{ session()->get('failed') }}</span>
-        </div>
-
-    @endif
 
 </x-layout>

@@ -1,15 +1,29 @@
 <x-layout>
 
     <div class="mx-auto">
+        @if (session()->has('success'))
+
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
+            <span class="font-medium">{{ session()->get('success') }}</span>
+        </div>
+
+        @endif
+        @if (session()->has('failed'))
+
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 " role="alert">
+            <span class="font-medium">{{ session()->get('failed') }}</span>
+        </div>
+
+        @endif
         <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" action="{{ route('projects.add') }}">
             @csrf
             <div class="grid md:grid-cols-2 gap-x-6 md:mt-4">
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="project_name">Project Name</label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="project_name" name="project_name" type="text"  placeholder="Enter project name">
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="project_name" name="project_name" type="text" placeholder="Enter project name">
 
                     @if($errors->has('project_name'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('project_name') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('project_name') }}</p>
                     @endif
 
                 </div>
@@ -18,7 +32,7 @@
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="subtitle" name="subtitle" type="text" placeholder="Enter subtitle">
 
                     @if($errors->has('subtitle'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('subtitle') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('subtitle') }}</p>
                     @endif
 
                 </div>
@@ -28,20 +42,20 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="start_date">Start Date</label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="start_date" name="start_date" type="date">
-               
+
                     @if($errors->has('start_date'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('start_date') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('start_date') }}</p>
                     @endif
-               
+
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="end_date">End Date</label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="end_date" name="end_date" type="date">
-              
+
                     @if($errors->has('end_date'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('end_date') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('end_date') }}</p>
                     @endif
-              
+
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="priority">Priority</label>
@@ -53,7 +67,7 @@
                     </select>
 
                     @if($errors->has('priority'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('priority') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('priority') }}</p>
                     @endif
 
                 </div>
@@ -66,14 +80,14 @@
                         <option value="">Select Project Manager</option>
                         @foreach($managers as $manager)
 
-                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
-                        
+                        <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+
                         @endforeach
                         <!-- Add options for project managers here -->
                     </select>
 
                     @if($errors->has('project_manager'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('project_manager') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('project_manager') }}</p>
                     @endif
 
                 </div>
@@ -85,14 +99,14 @@
 
                         @foreach($seniors as $senior)
 
-                            <option value="{{ $senior->id }}">{{ $senior->name }}</option>
-                        
+                        <option value="{{ $senior->id }}">{{ $senior->name }}</option>
+
                         @endforeach
 
                     </select>
 
                     @if($errors->has('team_lead'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('team_lead') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('team_lead') }}</p>
                     @endif
 
                 </div>
@@ -100,13 +114,16 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="status">Status</label>
                     <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" name="status">
                         <option value="">Select Status</option>
-                        <option value="Active">Active</option>
-                        <option value="Scheduled">Scheduled</option>
-                       
+                        @foreach($status_arr as $el)
+
+                        <option value="{{ $el }}">{{ $el }}</option>
+
+                        @endforeach
+
                     </select>
 
                     @if($errors->has('status'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('status') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('status') }}</p>
                     @endif
 
                 </div>
@@ -121,14 +138,14 @@
 
                         @foreach($frontend_arr as $el)
 
-                            <option value="{{ $el }}">{{  $el }}</option>
-                        
+                        <option value="{{ $el }}">{{ $el }}</option>
+
                         @endforeach
 
                     </select>
 
                     @if($errors->has('frontend'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('frontend') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('frontend') }}</p>
                     @endif
 
                 </div>
@@ -140,14 +157,14 @@
 
                         @foreach($backend_arr as $el)
 
-                            <option value="{{ $el }}">{{  $el }}</option>
-                        
+                        <option value="{{ $el }}">{{ $el }}</option>
+
                         @endforeach
 
                     </select>
 
                     @if($errors->has('backend'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('backend') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('backend') }}</p>
                     @endif
 
                 </div>
@@ -159,14 +176,14 @@
 
                         @foreach($db_arr as $el)
 
-                            <option value="{{ $el }}">{{  $el }}</option>
-                        
+                        <option value="{{ $el }}">{{ $el }}</option>
+
                         @endforeach
 
                     </select>
 
                     @if($errors->has('database'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('database') }}</p>
+                    <p class="text-red-500 text-xs italic">{{ $errors->first('database') }}</p>
                     @endif
 
                 </div>
@@ -175,9 +192,9 @@
             <div class="my-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Description</label>
                 <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" name="description" placeholder="Enter description"></textarea>
-          
+
                 @if($errors->has('description'))
-                         <p class="text-red-500 text-xs italic">{{ $errors->first('description') }}</p>
+                <p class="text-red-500 text-xs italic">{{ $errors->first('description') }}</p>
                 @endif
 
             </div>
@@ -197,20 +214,7 @@
 
     </div>
 
-    @if (session()->has('success'))
 
-        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
-            <span class="font-medium">{{ session()->get('success') }}</span>
-        </div>
-
-    @endif
-    @if (session()->has('failed'))
-
-        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 " role="alert">
-            <span class="font-medium">{{ session()->get('failed') }}</span>
-        </div>
-
-    @endif
 
 
 </x-layout>

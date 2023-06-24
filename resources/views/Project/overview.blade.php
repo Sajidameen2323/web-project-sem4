@@ -7,8 +7,7 @@
     <p> <?php print_r($data->project_manager) ?> </p>
     @endif -->
 
-    <x-project_layout>
-
+    <x-project_layout :title="$title" :project_id="$project_id">
 
         <div class="grid lg:grid-cols-5 grid-cols-1 gap-4">
             <!-- CTA -->
@@ -48,15 +47,15 @@
                     </div>
                     <div class="flex items-center justify-between text-gray-200">
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold" id="number">0</h3>
+                            <h3 class="text-2xl font-bold" id="number" data-val="{{ $tot_tasks }}">{{ $tot_tasks}}</h3>
                             <p class="text-sm">Tasks</p>
                         </div>
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold">10</h3>
+                            <h3 class="text-2xl font-bold">{{ $tot_members}}</h3>
                             <p class="text-sm">Members</p>
                         </div>
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold">5</h3>
+                            <h3 class="text-2xl font-bold">{{ $tot_commits}}</h3>
                             <p class="text-sm">Commits</p>
                         </div>
                     </div>
@@ -130,7 +129,7 @@
         </div>
 
         <script defer>
-            const targetNumber = 100; // The target number to animate to
+            const targetNumber = document.getElementById("number").dataset.val || 0; // The target number to animate to
             const duration = 2000; // Animation duration in milliseconds
 
             let currentNumber = 0;

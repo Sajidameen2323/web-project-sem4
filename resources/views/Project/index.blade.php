@@ -2,17 +2,38 @@
 
     <div class="flex flex-col items-stretch">
         <div>
-            <div class="grid md:grid-cols-5">
-                <div class="md:col-span-4">
 
-                </div>
+            <div class="grid md:grid-cols-5">
+                <form class="md:col-span-4" method="get" action="{{ route('projects') }}">
+                    @csrf
+                    @method('GET')
+                    <span class="mx-6 text-xs text-gray-800 ">Filter projects by state</span>
+                    <div class="flex justify-start items-center mx-6">
+                        <div class="relative">
+                            <select class="block appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="filter">
+                                <option value="">Select Status</option>
+                                <option value="Active" {{ $filterValue == 'Active' ? 'selected' : '' }}>Active</option>
+                                <option value="Postponed" {{ $filterValue == 'Postponed' ? 'selected' : '' }}>Postponed</option>
+                                <option value="Completed" {{ $filterValue == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="Dropped" {{ $filterValue == 'Dropped' ? 'selected' : '' }}>Dropped</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1" />
+                                </svg>
+                            </div>
+                        </div>
+                        <button class="mx-2 bg-green-500 text-sm hover:bg-green-700 text-white px-4 py-2 rounded">FILTER</button>
+                    </div>
+                </form>
+                @if($write_permission)
                 <a href="{{ route('projects.addform')}}">
-                    <button class="px-6 py-3 text-white transition-colors duration-300 ease-in-out bg-gradient-to-r from-green-400 to-green-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 rounded-lg shadow-lg">
+                    <button class="bg-green-500 text-sm hover:bg-green-700 text-white px-4 py-2 rounded mt-4 mx-6 md:mx-0">
                         CREATE PROJECT
 
                     </button>
                 </a>
-
+                @endif
 
             </div>
 
@@ -26,6 +47,7 @@
                     <!-- Card Item -->
                     <div class="w-full max-w-sm bg-gray-700 border border-gray-800 rounded-lg shadow ">
                         <div class="flex justify-end px-4 pt-4">
+                            @if($write_permission)
                             <button id="dropdownButton" data-dropdown-toggle="dropdown-{{ $project->project_id }}" class="inline-block text-gray-500  hover:bg-gray-600  focus:ring-4 focus:outline-none focus:ring-gray-800  rounded-lg text-sm p-1.5" type="button">
                                 <span class="sr-only">Open dropdown</span>
                                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -61,9 +83,10 @@
                                     </li>
                                 </ul>
                             </div>
+                            @endif
                         </div>
                         <div class="flex flex-col items-center pb-10">
-                            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="https://automynd.com/assets/automynd.png" alt="Bonnie image" />
+                            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/images/laptop.webp" alt="Bonnie image" />
                             <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{$project->project_name}}</h5>
                             <span class="text-sm text-gray-500 dark:text-gray-400">{{$project->subtitle}}</span>
                             <div class="flex mt-4 space-x-3 md:mt-6">

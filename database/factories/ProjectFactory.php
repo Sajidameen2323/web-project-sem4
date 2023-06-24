@@ -29,7 +29,7 @@ class ProjectFactory extends Factory
             'end_date' => Carbon::now()->addDays(7),
             'project_manager' => 1, // Assuming 10 users in the database
             'team_lead' => 2,
-            'status' => $this->faker->randomElement(['Active', 'Completed', 'Dropped', 'Postponed', 'Scheduled']),
+            'status' => $this->faker->randomElement(['Active', 'Completed', 'Dropped', 'Postponed']),
             'priority' => $this->faker->randomElement(['High', 'Medium', 'Low']),
             'description' => $this->faker->paragraph,
             'frontend' => $this->faker->randomElement(['React', 'Vue', 'Next', 'Angular', 'Windows','Svelte']),

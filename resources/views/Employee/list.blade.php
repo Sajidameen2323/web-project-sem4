@@ -1,18 +1,18 @@
 <x-layout>
-
+    @if($write_permission)
     <div class="grid md:grid-cols-5">
         <div class="md:col-span-4">
 
         </div>
         <a href="{{ route('employees.form') }}">
-            <button class="px-6 py-3 text-white transition-colors duration-300 ease-in-out bg-gradient-to-r from-green-400 to-green-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 rounded-lg shadow-lg">
+            <button class="bg-green-500 text-sm hover:bg-green-700 text-white px-4 py-2 rounded mt-4 mx-6 md:mx-0">
                 ADD EMPLOYEE
             </button>
         </a>
 
 
     </div>
-
+    @endif
     <div class="container grid px-6 mx-auto">
         <!-- With actions -->
         <h4 class="mb-4 text-lg font-semibold text-gray-800">
@@ -27,7 +27,9 @@
                             <th class="px-4 py-3">Role</th>
                             <th class="px-4 py-3">Email</th>
                             <th class="px-4 py-3">Joined Date</th>
+                            @if($write_permission)
                             <th class="px-4 py-3">Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -64,6 +66,7 @@
                                 ?>
 
                             </td>
+                            @if($write_permission)
                             <td class="px-4 py-3">
                                 <div class="flex items-center space-x-4 text-sm">
                                     <a class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray" aria-label="Edit" href="{{ route('employees.edit', $employee->id) }}">
@@ -87,6 +90,7 @@
 
                                 </div>
                             </td>
+                            @endif
                         </tr>
                         @endforeach
 
@@ -101,7 +105,7 @@
                 <!-- Pagination -->
                 <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                     <nav aria-label="Table navigation">
-
+                        {!! $employees->links() !!}
                     </nav>
                 </span>
             </div>

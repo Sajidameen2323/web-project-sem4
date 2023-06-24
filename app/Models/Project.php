@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
@@ -42,5 +43,13 @@ class Project extends Model
     public function teamLead()
     {
         return $this->belongsTo(User::class, 'team_lead');
+    }
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function teams(): HasMany
+    {
+        return $this->hasMany(Team::class,'member_id');
     }
 }

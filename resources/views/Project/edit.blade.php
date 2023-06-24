@@ -1,6 +1,20 @@
 <x-layout>
 
     <div class="mx-auto">
+        @if (session()->has('success'))
+
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
+            <span class="font-medium">{{ session()->get('success') }}</span>
+        </div>
+
+        @endif
+        @if (session()->has('failed'))
+
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 " role="alert">
+            <span class="font-medium">{{ session()->get('failed') }}</span>
+        </div>
+
+        @endif
         <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" action="{{ route('projects.update', $project->project_id) }}">
             @csrf
             @method('PUT')
@@ -101,8 +115,12 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="status">Status</label>
                     <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="status" name="status">
                         <option value="">Select Status</option>
-                        <option value="Active" {{ $project->status == "Active" ? 'selected' : '' }}>Active</option>
-                        <option value="Scheduled" {{ $project->status == "Scheduled" ? 'selected' : '' }}>Scheduled</option>
+
+                        @foreach($status_arr as $el)
+
+                        <option value="{{ $el }}" {{ $project->status == $el ? 'selected' : '' }}>{{ $el }}</option>
+
+                        @endforeach
 
                     </select>
 
@@ -200,20 +218,7 @@
 
     </div>
 
-    @if (session()->has('success'))
 
-    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 " role="alert">
-        <span class="font-medium">{{ session()->get('success') }}</span>
-    </div>
-
-    @endif
-    @if (session()->has('failed'))
-
-    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 " role="alert">
-        <span class="font-medium">{{ session()->get('failed') }}</span>
-    </div>
-
-    @endif
 
 
 </x-layout>
