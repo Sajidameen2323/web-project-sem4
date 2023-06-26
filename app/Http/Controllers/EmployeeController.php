@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfilePic;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
@@ -25,6 +26,12 @@ class EmployeeController extends Controller
             foreach ($employees as $emp) {
                 $role = Role::findOrFail($emp->role);
                 $emp->role = $role->role;
+                $profilePicUrl = ProfilePic::where('user_id', $emp->id)->first();
+                if ($profilePicUrl) {
+                    $emp->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                } else {
+                    $emp->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
+                }
             }
 
             return view('Employee.list', ['session' => $request->session()->all(), "employees" => $employees]);
@@ -101,7 +108,16 @@ class EmployeeController extends Controller
         if (Auth::check()) {
             // Find the item by ID
             $item = User::findOrFail($id);
+            $admin_role_id = Role::where('role','admin')->first()->id;
 
+            if($item->id === auth()->user()->id)
+            {
+                return back()->with("failed", "Can not delete user while logged in");
+            }
+            if($item->role === $admin_role_id)
+            {
+                return back()->with("failed", "Can not delete Admin");
+            }
             // Delete the item
             $item->delete();
 

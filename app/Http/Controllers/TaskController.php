@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Commit;
 use App\Models\Discussion;
+use App\Models\ProfilePic;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
@@ -28,11 +29,13 @@ class TaskController extends Controller
             if ($filterValue) {
                 $query = Task::select('id', 'title', 'state', 'assigned_to', 'type', 'created_at')
                     ->where('project_id', '=', $id)
-                    ->where('state', $filterValue);
+                    ->where('state', $filterValue)
+                    ->orderByRaw('created_at DESC');
             } else {
 
                 $query = Task::select('id', 'title', 'state', 'assigned_to', 'type', 'created_at')
-                    ->where('project_id', '=', $id);
+                    ->where('project_id', '=', $id)
+                    ->orderByRaw('created_at DESC');
             }
 
             $tasks = $query->paginate(10);
@@ -42,12 +45,19 @@ class TaskController extends Controller
                 $task->employee_name = $user->name;
                 $task->email = $user->email;
 
-                $member_role = Team::select('role')
+                $member = Team::select('role')
                     ->where('project_id', $id)
                     ->where('employee_id', $task->assigned_to)
                     ->first();
 
-                $task->employee_role = $member_role->role;
+                $task->employee_role = $member->role;
+
+                $profilePicUrl = ProfilePic::where('user_id', $task->assigned_to)->first();
+                if ($profilePicUrl) {
+                    $task->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                } else {
+                    $task->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
+                }
             }
 
             return view('Task.index', [
@@ -264,9 +274,24 @@ class TaskController extends Controller
             $task->employee_name = $user->name;
             $task->email = $user->email;
 
+            $profilePicUrl = ProfilePic::where('user_id', $task->assigned_to)->first();
+            if ($profilePicUrl) {
+                $task->pro_pic = asset('storage/' . $profilePicUrl->pic);
+            } else {
+                $task->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
+            }
+
             foreach ($discussions as $discuss) {
                 $commentor = User::findOrFail($discuss->user_id);
                 $discuss->username = $commentor->name;
+                $profilePicUrl = ProfilePic::where('user_id', $discuss->user_id)->first();
+
+                if ($profilePicUrl) {
+                    $discuss->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                } else {
+                    $discuss->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
+                }
+                
             }
 
             $member_role = Team::select('role')
@@ -457,6 +482,31 @@ class TaskController extends Controller
             ]);
         }
 
+        return view('Auth.login', ['data' => 'Please Login!']);
+    }
+
+
+    public function startTask(Request $request, $id, $t_id)
+    {
+        if (Auth::check()) {
+
+
+            $task = Task::findOrFail($t_id);
+
+            // Find the item by ID
+            try {
+                $task->state = 'In Progress';
+                $task->save();
+
+                error_log("---Updated Task---");
+            } catch (Exception $ex) {
+                error_log($ex->getMessage());
+                return back()->with("failed", "Could Not Update Task");
+            }
+            // Redirect or return a response
+            // For example, redirect back to the previous page
+            return redirect()->back()->with('success', 'Comment deleted successfully.');
+        }
         return view('Auth.login', ['data' => 'Please Login!']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfilePic;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Team;
@@ -29,11 +30,22 @@ class TeamController extends Controller
 
             $proj_name = $project->project_name;
             $employees = Team::select('member_id', 'project_id', 'employee_id', 'role', 'is_active', 'created_at')->where('project_id', '=', $id)->paginate(10);
+            
 
             foreach ($employees as $emp) {
                 $user = User::findOrFail($emp->employee_id);
                 $emp->employee_name = $user->name;
                 $emp->email = $user->email;
+
+                $profilePicUrl = ProfilePic::where('user_id', $emp->employee_id)->first();
+                if($profilePicUrl)
+                {
+                    $emp->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                }
+                else{
+                    $emp->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
+                }
+                
             }
 
             return view('Team.list', [
@@ -51,16 +63,16 @@ class TeamController extends Controller
             $project = Project::findOrFail($id);
             $proj_name = $project->project_name;
             $adminRole = Role::where('role', 'admin')->first();
-         
+
             $roles = [
                 'Business Analyst', 'Developer', 'Systems Analyst', ' QA Engineer', 'DBA', 'UX/UI Designer',
                 'Security Specialist', 'Technical Writer'
             ];
 
             $members = [];
-            if ($adminRole ) {
+            if ($adminRole) {
                 $adminRoleId = $adminRole->id;
-            
+
                 $members = User::where('role', '!=', $adminRoleId)
                     ->orderBy('name')
                     ->get();
@@ -135,7 +147,7 @@ class TeamController extends Controller
             // The user is logged in...
             $project = Project::findOrFail($id);
             $adminRole = Role::where('role', 'admin')->first();
-      
+
             $proj_name = $project->project_name;
             $roles = [
                 'Business Analyst', 'Developer', 'Systems Analyst', ' QA Engineer', 'DBA', 'UX/UI Designer',
@@ -143,9 +155,9 @@ class TeamController extends Controller
             ];
 
             $members = [];
-            if ($adminRole ) {
+            if ($adminRole) {
                 $adminRoleId = $adminRole->id;
-          
+
 
                 $members = User::where('role', '!=', $adminRoleId)
                     ->orderBy('name')

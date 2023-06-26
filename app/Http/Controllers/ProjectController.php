@@ -25,10 +25,12 @@ class ProjectController extends Controller
             // The user is logged in...
             $filterValue = $request->input('filter');
             if ($filterValue) {
-                $query = Project::where('status', $filterValue);
+                $query = Project::where('status', $filterValue)
+                ->orderByRaw('created_at DESC');
             } else {
 
-                $query = Project::where('project_id', '>', '0');
+                $query = Project::where('project_id', '>', '0')
+                ->orderByRaw('created_at DESC');
             }
             $projs = $query->paginate(8);
 
@@ -170,7 +172,7 @@ class ProjectController extends Controller
             // Redirect or return a response
             // For example, redirect back to the previous page
             return view('Project.overview', [
-                'data' => $item, 'project_manager' => $project_manager->name,
+                'data' => $item, 'project_manager' => $project_manager->name ?? 'No Project Manager Assigned',
                 'team_lead' => $team_lead->name,
                 'tot_tasks' => $tasks_count,
                 'tot_members' => $members_count,

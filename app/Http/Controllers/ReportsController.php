@@ -90,4 +90,43 @@ class ReportsController extends Controller
 
         return view('Auth.login', ['data' => 'Please Login!']);
     }
+
+
+    public function taskProgress(Request $request, $id)
+    {
+        if (Auth::check()) {
+            // The user is logged in...
+            $project = Project::findOrFail($id);
+
+
+
+            $tasks = Task::select('id', 'title', 'state', 'assigned_to', 'type', 'created_at', 'target_date')
+                ->where('project_id', '=', $id)->get();
+
+            foreach ($tasks as $task) {
+                $user = User::findOrFail($task->assigned_to);
+                $task->employee_name = $user->name;
+                $task->email = $user->email;
+
+                $member_role = Team::select('role')
+                    ->where('project_id', $id)
+                    ->where('employee_id', $task->assigned_to)
+                    ->first();
+
+                $task->employee_role = $member_role->role;
+            }
+
+            return view('Report.progress', [
+                'session' => $request->session()->all(),
+                'tasks' => $tasks,
+                'project_id' => $id,
+                'title' => 'Tasks',
+
+            ]);
+        }
+
+        return view('Auth.login', ['data' => 'Please Login!']);
+    }
+
+
 }

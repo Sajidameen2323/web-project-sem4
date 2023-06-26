@@ -19,47 +19,18 @@ use Illuminate\Http\Request;
 |
 */
 use App\Charts\exampleChart;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportsController;
 use App\Models\Project;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 // ...
 
 
-Route::get('/', function (Request $request) {
-
-    $today_users = User::whereDate('created_at', today())->count();
-    $yesterday_users = User::whereDate('created_at', today()->subDays(1))->count();
-    $users_2_days_ago = User::whereDate('created_at', today()->subDays(2))->count();
-
-    $chart = new exampleChart;
-    $chart->labels(['2 days ago', 'Yesterday', 'Today']);
-    $chart->dataset('Users', 'line', [$users_2_days_ago, $yesterday_users, $today_users]);
-
-    $chart->options([
-        'tooltip' => [
-            'show' => true // or false, depending on what you want.
-        ]
-    ]);
-
-    return view('welcome', [
-        'Remembered' => false,
-        'session' => $request->session()->all(),
-        'chart' => $chart,
-    ]);
-})->middleware(['auth'])->name('dashboard');
-
-Route::get('/settings', function (Request $request) {
-
-    return view('User.settings', [
-        'Remembered' => false,
-        'session' => $request->session()->all(),
-
-    ]);
-})->middleware(['auth'])->name('settings');
+Route::get('/', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 Route::get('/projects/chart', [ReportsController::class, 'chart']);
-
 
 Route::middleware(['guest'])->group(function () {
 
@@ -93,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project/{id}/reports/gantt', [ReportsController::class, 'gantt'])->name("project.report.gantt");
 
     Route::get('/project/{id}/reports/status', [ReportsController::class, 'projectStatus'])->name("project.report.status");
+    
+    Route::get('/project/{id}/reports/progress', [ReportsController::class, 'taskProgress'])->name("project.report.progress");
 
     // Below routes manage employees
 
@@ -132,7 +105,22 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/project/{id}/tasks/{t_id}/commit', [TaskController::class, 'commitTask'])->name("tasks.commit");
 
+    Route::post('/project/{id}/tasks/{t_id}/start', [TaskController::class, 'startTask'])->name("tasks.start");
+
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name("tasks.delete");
 
     Route::get('/mytasks', [TaskController::class, 'getMyTasks'])->name("tasks.my");
+
+
+    // Below routes manage Account settings
+
+    Route::get('/settings', [AccountController::class, 'index'])->name("settings");
+
+    Route::post('/update/name', [AccountController::class, 'updateName'])->name("update.name");
+
+    Route::post('/update/profile_pic', [AccountController::class, 'updateProfilePic'])->name("update.profile_pic");
+
+    Route::post('/update/password', [AccountController::class, 'updatePassword'])->name("update.password");
+
+    Route::get('/profile/getProfilePic', [AccountController::class, 'getProfilePic'])->name("profile.pic");
 });

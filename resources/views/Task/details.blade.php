@@ -131,7 +131,7 @@
                     </div>
 
                     <div class="flex flex-wrap justify-start items-center mb-4">
-                  
+
                         @if($task->commited_date != null)
                         <div class="mr-4 mb-2"><span class="text-gray-600 text-sm">Commited At:</span>
 
@@ -150,7 +150,7 @@
                     <div class="flex justify-start items-center mb-4">
                         <div class="mr-4"><span class="text-gray-600 text-sm">Assigned to:</span></div>
                         <div class="flex-shrink-0 h-10 w-10">
-                            <img class="object-cover w-full h-full rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" loading="lazy" />
+                            <img class="object-cover w-full h-full rounded-full" src="{{ $task->pro_pic }}" alt="" loading="lazy" />
                         </div>
                         <div class="ml-4">
                             <div class="text-gray-800 text-sm font-medium">{{ $task->employee_name }}</div>
@@ -159,20 +159,26 @@
                     </div>
                     @if(auth()->user()->id == $task->assigned_to && $task->state != 'Completed')
 
+                        @if($task->state == 'Pending')
+                            <form class="flex flex-wrap justify-start items-center mb-4" method="POST" action="{{ route('tasks.start',['id' => $project_id, 't_id' => $task->id]) }}">
+                                @csrf
 
-                    <form class="flex flex-wrap justify-start items-center mb-4" method="POST" action="{{ route('tasks.commit',['id' => $project_id, 't_id' => $task->id]) }}">
-                        @csrf
-                        <div class="mx-2">
-                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="hours_spent" name="hours_spent" type="number" placeholder="Enter Hours spent" value="{{ old('hours_spent') }}">
+                                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg ">Start Working</button>
+                            </form>
+                        @else
+                            <form class="flex flex-wrap justify-start items-center mb-4" method="POST" action="{{ route('tasks.commit',['id' => $project_id, 't_id' => $task->id]) }}">
+                                @csrf
+                                <div class="mx-2">
+                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="hours_spent" name="hours_spent" type="number" placeholder="Enter Hours spent" value="{{ old('hours_spent') }}">
 
-                            @if($errors->has('hours_spent'))
-                            <p class="text-red-500 text-xs italic">{{ $errors->first('hours_spent') }}</p>
-                            @endif
+                                    @if($errors->has('hours_spent'))
+                                    <p class="text-red-500 text-xs italic">{{ $errors->first('hours_spent') }}</p>
+                                    @endif
 
-                        </div>
-                        <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg ">Commit</button>
-                    </form>
-
+                                </div>
+                                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg ">Commit</button>
+                            </form>
+                        @endif
                     @endif
                 </div>
                 <hr class="my-6">
@@ -192,7 +198,7 @@
 
                             ])>
                             <div class="flex-shrink-0 h-8 w-8">
-                                <img class="object-cover w-full h-full rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" loading="lazy" />
+                                <img class="object-cover w-full h-full rounded-full" src="{{$discuss->pro_pic}}" alt="" loading="lazy" />
                             </div>
                             <div class="ml-4 bg-gray-100 rounded-lg p-4 w-full">
                                 <div class="flex justify-between items-center mb-2">

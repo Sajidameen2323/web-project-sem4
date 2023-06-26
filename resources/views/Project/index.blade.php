@@ -86,7 +86,7 @@
                             @endif
                         </div>
                         <div class="flex flex-col items-center pb-10">
-                            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/images/laptop.webp" alt="Bonnie image" />
+                            <img class="w-52 h-32 mb-3 rounded shadow-lg" src="/images/laptop.webp" alt="Bonnie image" />
                             <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{$project->project_name}}</h5>
                             <span class="text-sm text-gray-500 dark:text-gray-400">{{$project->subtitle}}</span>
                             <div class="flex mt-4 space-x-3 md:mt-6">

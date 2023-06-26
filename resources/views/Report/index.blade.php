@@ -31,8 +31,11 @@
                     <div class="bg-gray-700 p-6 rounded shadow">
                         <h2 class="text-xl text-gray-200 font-bold mb-4">Task Progress Report</h2>
                         <p class="text-gray-300">A Task Progress Report is a concise document that provides an update on the completion status of individual tasks within a project. It highlights the progress made, any delays or issues encountered, and helps in monitoring and managing task-level performance.</p>
+                        
+                        <a href="{{ route('project.report.progress',$project_id) }}">
                         <button class="mt-4 bg-purple-500 hover:bg-purple-600 text-gray-200 font-bold py-2 px-4 rounded">Generate
                             Report</button>
+                        </a>
                     </div>
                 </div>
             </div>
