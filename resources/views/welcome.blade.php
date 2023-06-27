@@ -38,7 +38,7 @@
             @endforeach
             </div>
             <div class="bg-gray-700  rounded-lg shadow-lg p-6 mb-8 mt-6">
-                <h2 class="text-xl text-gray-300 font-bold mb-4">Project Overview</h2>
+                <h2 class="text-xl text-gray-300 font-bold mb-4">Active Projects Overview</h2>
                 {!! $chart->container() !!}
                 {!! $chart->script() !!}
             </div>

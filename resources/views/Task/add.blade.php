@@ -57,9 +57,7 @@
 
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Description</label>
-                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" name="description" placeholder="Enter Description">
-                {{ old('description') }}
-                </textarea>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" name="description" placeholder="Enter Description">{{old('description')}}</textarea>
 
                 @if($errors->has('description'))
                 <p class="text-red-500 text-xs italic">{{ $errors->first('description') }}</p>

@@ -41,7 +41,7 @@ class TaskController extends Controller
             $tasks = $query->paginate(10);
 
             foreach ($tasks as $task) {
-                $user = User::findOrFail($task->assigned_to);
+                $user = User::withTrashed()->findOrFail($task->assigned_to);
                 $task->employee_name = $user->name;
                 $task->email = $user->email;
 
@@ -86,7 +86,7 @@ class TaskController extends Controller
                 ->get();
 
             foreach ($proj_members as $member) {
-                $usr = User::findOrFail($member->employee_id);
+                $usr = User::withTrashed()->findOrFail($member->employee_id);
                 $member->name = $usr->name;
             }
 
@@ -182,7 +182,7 @@ class TaskController extends Controller
                 ->get();
 
             foreach ($proj_members as $member) {
-                $usr = User::findOrFail($member->employee_id);
+                $usr = User::withTrashed()->findOrFail($member->employee_id);
                 $member->name = $usr->name;
             }
 
@@ -270,7 +270,7 @@ class TaskController extends Controller
 
             $discussions = Discussion::where('task_id', $t_id)->get();
 
-            $user = User::findOrFail($task->assigned_to);
+            $user = User::withTrashed()->findOrFail($task->assigned_to);
             $task->employee_name = $user->name;
             $task->email = $user->email;
 

@@ -33,7 +33,7 @@ class TeamController extends Controller
             
 
             foreach ($employees as $emp) {
-                $user = User::findOrFail($emp->employee_id);
+                $user = User::withTrashed()->findOrFail($emp->employee_id);
                 $emp->employee_name = $user->name;
                 $emp->email = $user->email;
 
@@ -172,7 +172,7 @@ class TeamController extends Controller
 
             $curr_member = Team::findOrFail($m_id);
 
-            $curr_member->member_name = User::findOrFail($curr_member->employee_id)->name;
+            $curr_member->member_name = User::withTrashed()->findOrFail($curr_member->employee_id)->name;
 
             return view('Team.edit', [
                 'session' => $request->session()->all(),

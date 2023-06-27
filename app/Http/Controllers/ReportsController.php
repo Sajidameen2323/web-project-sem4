@@ -46,7 +46,7 @@ class ReportsController extends Controller
                 ->where('project_id', '=', $id)->get();
 
             foreach ($tasks as $task) {
-                $user = User::findOrFail($task->assigned_to);
+                $user = User::withTrashed()->findOrFail($task->assigned_to);
                 $task->employee_name = $user->name;
                 $task->email = $user->email;
 
@@ -104,7 +104,7 @@ class ReportsController extends Controller
                 ->where('project_id', '=', $id)->get();
 
             foreach ($tasks as $task) {
-                $user = User::findOrFail($task->assigned_to);
+                $user = User::withTrashed()->findOrFail($task->assigned_to);
                 $task->employee_name = $user->name;
                 $task->email = $user->email;
 
