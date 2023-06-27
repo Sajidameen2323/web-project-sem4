@@ -4,9 +4,21 @@ module.exports = {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
-    "./node_modules/flowbite/**/*.js"
+    "./node_modules/flowbite/**/*.js",
+    './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
   ],
   theme: {
+    darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        dark: {
+          bg: '#000',
+          text: '#fff',
+        },
+      },
+    },
+  },
     extend: {},
   },
   plugins: [
