@@ -154,7 +154,7 @@ class ReportsController extends Controller
                 'title' => "kaham"
             ];
 
-            $pdf = PDF::loadView('Project.overview', $data);
+            $pdf = PDF::loadView('Report.projectexport', $data);
             // Optional: Set any additional options for the PDF
             $pdf->setOptions([
                 'dpi' => 150,
