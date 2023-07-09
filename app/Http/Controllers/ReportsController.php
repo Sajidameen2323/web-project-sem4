@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commit;
+use PDF;
+use Illuminate\Support\Facades\View;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
@@ -128,5 +131,45 @@ class ReportsController extends Controller
         return view('Auth.login', ['data' => 'Please Login!']);
     }
 
+    public function exportToPdf(Request $request, $id)
+    {
+        if (Auth::check()) {
+            // Find the item by ID
+            $item = Project::findOrFail($id);
 
+            $project_manager = User::select('name')->where('id', $item->project_manager)->first();
+            $team_lead = User::select('name')->where('id', $item->team_lead)->first();
+            $tasks_count = count(Task::where('project_id', $id)->get());
+            $members_count = count(Team::where('project_id', $id)->get());
+            $commits_count = count(Commit::where('project_id', $id)->get());
+
+            $data = [
+                'data' => $item,
+                'project_manager' => $project_manager->name ?? 'No Project Manager Assigned',
+                'team_lead' => $team_lead->name,
+                'tot_tasks' => $tasks_count,
+                'tot_members' => $members_count,
+                'tot_commits' => $commits_count,
+                'project_id' => $item->project_id,
+                'title' => "kaham"
+            ];
+
+            $pdf = PDF::loadView('Project.overview', $data);
+            // Optional: Set any additional options for the PDF
+            $pdf->setOptions([
+                'dpi' => 150,
+                'defaultFont' => 'Arial',
+            ]);
+
+            // Optional: Save the PDF to a file instead of directly downloading it
+            // $pdf->save(public_path('pdf/my_page.pdf'));
+
+            // Optional: Set the PDF's filename when downloading
+            // $pdf->download('my_page.pdf');
+
+            // Return the PDF as a download response
+            return $pdf->stream('my_page.pdf');
+        }
+        return view('Auth.login', ['data' => 'Please Login!']);
+    }
 }

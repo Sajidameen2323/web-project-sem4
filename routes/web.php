@@ -64,9 +64,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/project/{id}/reports/gantt', [ReportsController::class, 'gantt'])->name("project.report.gantt");
 
     Route::get('/project/{id}/reports/status', [ReportsController::class, 'projectStatus'])->name("project.report.status");
-    
+
     Route::get('/project/{id}/reports/progress', [ReportsController::class, 'taskProgress'])->name("project.report.progress");
 
+    Route::get('/project/{id}/pdf', [ReportsController::class, 'exportToPdf'])->name("project.pdf");
+   
     // Below routes manage employees
 
     Route::get('/employees', [EmployeeController::class, 'list'])->name("employees.list");

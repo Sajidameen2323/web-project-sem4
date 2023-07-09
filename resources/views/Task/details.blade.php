@@ -120,7 +120,7 @@
                         @if($task->time_spent != null)
                         <div class="mr-4 mb-2"><span class="text-gray-600 text-sm">Time Spent:</span>
 
-                            <span @class([ "text-sm font-semibold" , 'text-purple-600 '=> $task->effort < $task->time_spent,
+                            <span @class([ "text-sm font-semibold" , 'text-red-600 '=> $task->effort < $task->time_spent,
                                     'text-green-500 ' => $task->effort > $task->time_spent, ])>
 
                                     {{ $task->time_spent }} Hours
