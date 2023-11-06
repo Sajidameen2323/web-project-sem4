@@ -22,7 +22,7 @@ class AccountController extends Controller
             $profilePicUrl = ProfilePic::where('user_id', auth()->user()->id)->first();
 
             if ($profilePicUrl) {
-                $pro_pic = asset('storage/' . $profilePicUrl->pic);
+                $pro_pic = asset('/' . $profilePicUrl->pic);
             } else {
                 $pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
             }
