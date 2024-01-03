@@ -54,7 +54,7 @@ class TaskController extends Controller
 
                 $profilePicUrl = ProfilePic::where('user_id', $task->assigned_to)->first();
                 if ($profilePicUrl) {
-                    $task->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                    $task->pro_pic = asset('/' . $profilePicUrl->pic);
                 } else {
                     $task->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
                 }
@@ -276,7 +276,7 @@ class TaskController extends Controller
 
             $profilePicUrl = ProfilePic::where('user_id', $task->assigned_to)->first();
             if ($profilePicUrl) {
-                $task->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                $task->pro_pic = asset('/' . $profilePicUrl->pic);
             } else {
                 $task->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
             }
@@ -287,7 +287,7 @@ class TaskController extends Controller
                 $profilePicUrl = ProfilePic::where('user_id', $discuss->user_id)->first();
 
                 if ($profilePicUrl) {
-                    $discuss->pro_pic = asset('storage/' . $profilePicUrl->pic);
+                    $discuss->pro_pic = asset('/' . $profilePicUrl->pic);
                 } else {
                     $discuss->pro_pic = "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ";
                 }
